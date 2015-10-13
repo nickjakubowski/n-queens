@@ -54,34 +54,51 @@ window.countNRooksSolutions = function(n) {
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-   
-   GetAllTheBoards(empty board, 0)
 
-  var GetAllTheBoards = function(board, row){
+  var getAllTheBoards = function(board, row){
+    var newBoard;
     //declare results array;
     var results = [];
-    row = 0;
     //if no more rows (THIS IS THE BASE CASE)
       //add current board to results array
       if (row >= n) {
+        console.log(board.rows());
         results.push(board);
         return results;
-      }
+      //else statement not needed  
+      } else {
   
 
     //else -- (REDUCE THE PROBLEM AND MAKE RECURSIVE CALLS)
       //for # of columns
+      for (var i = 0; i < board.rows().length; i++) {
+        //newBoard = {};
+        //_.extend(newBoard, board);
+        board.togglePiece(row, i);
+        results = results.concat(getAllTheBoards(new Board(board.rows()), row + 1));
+        board.togglePiece(row, i);
+      }
         //concat to results array the result of 
         //each call to GetAllTheBoards passing in current board with queen in column dictated by for loop
         //also pass in row+1
 
-    //return results array 
+     return results; 
+     }
    }
+   debugger;
 
-  }
+   var board = new Board({n:n});
+   var allBoards = getAllTheBoards(board, 0);
+   
+   //declare a counter, ctr
+   //iterate over every element of allBoards
+     //pass each element to checker function
+     //if checker returns true, ctr++
+   
+   //return ctr
 
 
 
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
-  return solutionCount;
-};*/
+  //console.log('Number of solutions for ' + n + ' queens:', solutionCount);
+  //return solutionCount;
+};

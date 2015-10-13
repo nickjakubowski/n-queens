@@ -141,6 +141,7 @@
     },
 
     // test if any major diagonals on this board contain conflicts
+    //starting at bottom row
     hasAnyMajorDiagonalConflicts: function() {
       var oneQueen;
       for (var i = this.rows().length-1; i >= 0; i--){
