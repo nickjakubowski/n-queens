@@ -33,36 +33,28 @@ window.findNRooksSolution = function(n) {
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
   //var result = n;
-  var solutionCount;
+  var solutionCount = 0;
   
   var getAllTheBoards = function(board, row) {
-    var results = [];
-    var newBoard;
 
     if (row >= n) {
-      results.push(JSON.parse(JSON.stringify(board.rows())));
-      return results;
+      solutionCount++;
+      return;
     } else {
       for (var i = 0; i < board.rows().length; i++) {
         board.togglePiece(row, i);
         if (!board.hasAnyColConflicts()) {
-          results = results.concat(getAllTheBoards(board, row + 1));
+          getAllTheBoards(board, row + 1);
         }
         board.togglePiece(row, i);
       }
-      return results;
+      return;
     }
   };
     
     var board = new Board({n:n});
-    var allBoards = getAllTheBoards(board, 0);
-    return allBoards.length;
-
-  //solution below works, but is a shortcut
-  // for (var i = n-1; i >= 1; i--){
-  //   result = result * i;
-  // }
-  console.log(allBoards);
+    getAllTheBoards(board, 0);
+    return solutionCount;
 };
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
   window.findNQueensSolution = function(n) {
@@ -97,26 +89,19 @@ window.countNQueensSolutions = function(n) {
   var solutions = 0;
 
   var getAllTheBoards = function(board, row){
-    var newBoard;
-    var results = [];
-    //debugger;
 
       if (row >= n) {
         solutions++;
         return;
-        /*results.push(JSON.parse(JSON.stringify(board.rows())));
-        return results;*/
       } else {
       for (var i = 0; i < board.rows().length; i++) {
         board.togglePiece(row, i);
-        if (!board.hasAnyColConflicts() && !board.hasAnyMajorDiagonalConflicts() && !board.hasAnyMinorDiagonalConflicts()) {
-          //results = results.concat(getAllTheBoards(board, row + 1));  
+        if (!board.hasAnyColConflicts() && !board.hasAnyMajorDiagonalConflicts() && !board.hasAnyMinorDiagonalConflicts()) { 
+        //if(!board.hasAnyQueensConflicts()){  
           getAllTheBoards(board, row+1);
         }
         board.togglePiece(row, i);
       }
-     
-     //return results; 
      }
    }
 
