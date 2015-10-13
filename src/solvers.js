@@ -32,63 +32,99 @@ window.findNRooksSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var result = n;
+  //var result = n;
   var solutionCount;
   
-  for (var i = n-1; i >= 1; i--){
-    result = result * i;
-  }
-  console.log(result);
-  
-  solutionCount = result;
-  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-  return solutionCount;
+  var getAllTheBoards = function(board, row) {
+    var results = [];
+    var newBoard;
+
+    if (row >= n) {
+      results.push(JSON.parse(JSON.stringify(board.rows())));
+      return results;
+    } else {
+      for (var i = 0; i < board.rows().length; i++) {
+        board.togglePiece(row, i);
+        if (!board.hasAnyColConflicts()) {
+          results = results.concat(getAllTheBoards(board, row + 1));
+        }
+        board.togglePiece(row, i);
+      }
+      return results;
+    }
+  };
+    
+    var board = new Board({n:n});
+    var allBoards = getAllTheBoards(board, 0);
+    return allBoards.length;
+
+  //solution below works, but is a shortcut
+  // for (var i = n-1; i >= 1; i--){
+  //   result = result * i;
+  // }
+  console.log(allBoards);
 };
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
   window.findNQueensSolution = function(n) {
-  var solution = undefined; //fixme
 
-  console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
-  return solution;
+    var getOneBoard = function(board, row){
+   
+      var result;
+      //debugger;
+         
+        if (row >= n) {
+          return JSON.parse(JSON.stringify(board.rows()));
+        } else {
+        for (var i = 0; i < board.rows().length; i++) {
+          board.togglePiece(row, i);
+          if (!board.hasAnyColConflicts() && !board.hasAnyMajorDiagonalConflicts() && !board.hasAnyMinorDiagonalConflicts()) {
+            result = getOneBoard(board, row + 1);
+            if(result && _.contains(result[result.length-1], 1)){
+              return result;
+            }  
+          }
+          board.togglePiece(row, i);
+        }
+      }
+      return (new Board({n:n})).rows();
+   };
+
+  return getOneBoard(new Board({n:n}), 0);
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
+  var solutions = 0;
 
   var getAllTheBoards = function(board, row){
     var newBoard;
-    //declare results array;
     var results = [];
-    //if no more rows (THIS IS THE BASE CASE)
-      //add current board to results array
-      if (row >= n) {
-        console.log(board.rows());
-        results.push(board);
-        return results;
-      //else statement not needed  
-      } else {
-  
+    //debugger;
 
-    //else -- (REDUCE THE PROBLEM AND MAKE RECURSIVE CALLS)
-      //for # of columns
+      if (row >= n) {
+        solutions++;
+        return;
+        /*results.push(JSON.parse(JSON.stringify(board.rows())));
+        return results;*/
+      } else {
       for (var i = 0; i < board.rows().length; i++) {
-        //newBoard = {};
-        //_.extend(newBoard, board);
         board.togglePiece(row, i);
-        results = results.concat(getAllTheBoards(new Board(board.rows()), row + 1));
+        if (!board.hasAnyColConflicts() && !board.hasAnyMajorDiagonalConflicts() && !board.hasAnyMinorDiagonalConflicts()) {
+          //results = results.concat(getAllTheBoards(board, row + 1));  
+          getAllTheBoards(board, row+1);
+        }
         board.togglePiece(row, i);
       }
-        //concat to results array the result of 
-        //each call to GetAllTheBoards passing in current board with queen in column dictated by for loop
-        //also pass in row+1
-
-     return results; 
+     
+     //return results; 
      }
    }
-   debugger;
 
    var board = new Board({n:n});
-   var allBoards = getAllTheBoards(board, 0);
+   //var allBoards = getAllTheBoards(board, 0);
+   getAllTheBoards(board, 0);
+   //console.log(allBoards.length);
+   return solutions;
    
    //declare a counter, ctr
    //iterate over every element of allBoards

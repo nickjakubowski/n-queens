@@ -200,9 +200,9 @@
       }
       //search again starting at the first column
       for (var i = 1; i < this.rows().length; i++){
-        oneQueens = false;
-        for (var j = i; j < this.rows().length; j++){
-          if (this.rows()[this.rows().length-j][j]){
+        oneQueen = false;
+        for (var j = 0; j+i < this.rows().length; j++){
+          if (this.rows()[this.rows().length - 1 - j][j+i] === 1){
             if(oneQueen){
               return true;
             } else {
