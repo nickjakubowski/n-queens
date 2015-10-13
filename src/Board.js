@@ -84,7 +84,21 @@
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      var oneQueen;
+
+      for(var i = 0; i < this.rows().length; i++){
+        oneQueen = false;
+        for(var j = 0; j < this.rows().length; j++){
+          if(this.rows()[i][j] === 1){
+            if(oneQueen){
+              return true;
+            } else {
+              oneQueen = true;
+            }
+          }  
+        }
+      }
+      return false;
     },
 
 
@@ -99,7 +113,21 @@
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      var oneQueen;
+
+      for (var i = 0; i < this.rows().length; i++){
+        oneQueen = false;
+        for (var j = 0; j < this.rows().length; j++) {
+          if (this.rows()[j][i] === 1) {
+            if (oneQueen) {
+              return true;
+            } else {
+              oneQueen = true;
+            }
+          }
+        }
+      }
+      return false;
     },
 
 
@@ -114,7 +142,33 @@
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      return false; // fixme
+      var oneQueen;
+      for (var i = this.rows().length-1; i >= 0; i--){
+        oneQueen = false;
+        for (var j = 0; j+i < this.rows().length; j++){
+          if(this.rows()[i+j][j] === 1){
+            if(oneQueen){
+              return true;
+            } else {
+              oneQueen = true;
+            }
+          }
+        }
+      }
+      //search again starting at the first row
+      for(var i = 1; i < this.rows().length; i++){
+        oneQueen = false;
+        for (var j = 0; j+i < this.rows().length; j++){
+          if(this.rows()[j][j+i] === 1){
+            if(oneQueen){
+              return true;
+            } else {
+              oneQueen = true;
+            }
+          }
+        }
+      }
+      return false;
     },
 
 
@@ -129,7 +183,34 @@
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      var oneQueen;
+      
+      for (var i = 0; i < this.rows().length; i++){
+        oneQueen = false;
+        for (var j = 0; i-j >= 0; j++){
+          if(this.rows()[i-j][j] === 1){
+            if(oneQueen){
+              return true;
+            } else {
+              oneQueen = true;
+            }
+          }
+        }
+      }
+      //search again starting at the first column
+      for (var i = 1; i < this.rows().length; i++){
+        oneQueens = false;
+        for (var j = i; j < this.rows().length; j++){
+          if (this.rows()[this.rows().length-j][j]){
+            if(oneQueen){
+              return true;
+            } else {
+              oneQueen = true;
+            }
+          }
+        }
+      }
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
