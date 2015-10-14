@@ -18,14 +18,12 @@
 window.findNRooksSolution = function(n) {
 
   var board = new Board({n:n})
-  console.log(board);
-  console.log(board.rows());
 
-  for(var i = 0; i < board.rows().length; i++){
+
+  for(var i = 0; i < n; i++){
     board.togglePiece(i, i);
   }
-  console.log(board);
-  //solution = board;
+
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(board));
   return board.rows();
 };
@@ -41,7 +39,7 @@ window.countNRooksSolutions = function(n) {
       solutionCount++;
       return;
     } else {
-      for (var i = 0; i < board.rows().length; i++) {
+      for (var i = 0; i < n; i++) {
         board.togglePiece(row, i);
         if (!board.hasAnyColConflicts()) {
           getAllTheBoards(board, row + 1);
@@ -62,12 +60,11 @@ window.countNRooksSolutions = function(n) {
     var getOneBoard = function(board, row){
    
       var result;
-      //debugger;
          
         if (row >= n) {
           return JSON.parse(JSON.stringify(board.rows()));
         } else {
-        for (var i = 0; i < board.rows().length; i++) {
+        for (var i = 0; i < n; i++) {
           board.togglePiece(row, i);
           if (!board.hasAnyColConflicts() && !board.hasAnyMajorDiagonalConflicts() && !board.hasAnyMinorDiagonalConflicts()) {
             result = getOneBoard(board, row + 1);
@@ -94,10 +91,9 @@ window.countNQueensSolutions = function(n) {
         solutions++;
         return;
       } else {
-      for (var i = 0; i < board.rows().length; i++) {
+      for (var i = 0; i < n; i++) {
         board.togglePiece(row, i);
         if (!board.hasAnyColConflicts() && !board.hasAnyMajorDiagonalConflicts() && !board.hasAnyMinorDiagonalConflicts()) { 
-        //if(!board.hasAnyQueensConflicts()){  
           getAllTheBoards(board, row+1);
         }
         board.togglePiece(row, i);
@@ -106,20 +102,6 @@ window.countNQueensSolutions = function(n) {
    }
 
    var board = new Board({n:n});
-   //var allBoards = getAllTheBoards(board, 0);
    getAllTheBoards(board, 0);
-   //console.log(allBoards.length);
    return solutions;
-   
-   //declare a counter, ctr
-   //iterate over every element of allBoards
-     //pass each element to checker function
-     //if checker returns true, ctr++
-   
-   //return ctr
-
-
-
-  //console.log('Number of solutions for ' + n + ' queens:', solutionCount);
-  //return solutionCount;
 };
