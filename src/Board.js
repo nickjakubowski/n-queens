@@ -83,24 +83,33 @@
       var row = this.get(rowIndex);
       var count = 0;
 
-      for( var i = 0; i < row.length; i++ ) {
-        count += row[i];
-      }
-
+      for (var i = 0; i < row.length; i++) {
+        if (row[i] === 1) {
+          count++;
+        }
+      } 
+        
       return count > 1;
-          },
+    },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
 
       var size = this.get('n');
+      var oneQueen;
 
-      for( var i = 0; i < size; i++ ) {
-        if( this.hasRowConflictAt(i) ) {
-          return true;
+      for(var i = 0; i < size; i++){
+        oneQueen = false;
+        for(var j = 0; j < size; j++){
+          if(this.get(i)[j] === 1){
+            if(oneQueen){
+              return true;
+            } else {
+              oneQueen = true;
+            }
+          }  
         }
       }
-
       return false;
           },
 
@@ -112,12 +121,13 @@
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
 
-      var size = this.get('n');
       var count = 0;
+      var size = this.get('n');
 
-      for( var i = 0; i < size; i++ ) {
-        var row = this.get(i);
-        count += row[colIndex];
+      for (var i = 0; i < size; i++) {
+        if (this.get(i)[colIndex] === 1) {
+          count++;
+        }
       }
 
       return count > 1;
@@ -127,13 +137,20 @@
     hasAnyColConflicts: function() {
 
       var size = this.get('n');
-
-      for( var i = 0; i < size; i++ ) {
-        if( this.hasColConflictAt(i) ) {
-          return true;
+      var oneQueen;
+      
+      for(var i = 0; i < size; i++){
+        oneQueen = false;
+        for(var j = 0; j < size; j++){
+          if(this.get(j)[i] === 1){
+            if(!oneQueen){
+              oneQueen = true;
+            } else {
+              return true;
+            }
+          }
         }
       }
-
       return false;
           },
 
@@ -144,7 +161,21 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var rowIndex = 0;
+      var size = this.get('n');
+      var count = 0;
+      if(majorDiagonalColumnIndexAtFirstRow < 0){
+        rowIndex -= majorDiagonalColumnIndexAtFirstRow;
+      }
+      var colIndex = Math.abs(majorDiagonalColumnIndexAtFirstRow);
+
+      for(; colIndex < size && rowIndex < size; rowIndex++, colIndex++){
+        if(this.get(rowIndex)[colIndex] === 1){
+          count++;
+        }
+      }  
+
+      return count > 1; 
     },
 
     // test if any major diagonals on this board contain conflicts
@@ -155,7 +186,7 @@
       for (var i = size-1; i >= 0; i--){
         oneQueen = false;
         for (var j = 0; j+i < size; j++){
-          if(this.rows()[i+j][j] === 1){
+          if(this.get(i+j)[j] === 1){
             if(oneQueen){
               return true;
             } else {
@@ -168,7 +199,7 @@
       for(var i = 1; i < size; i++){
         oneQueen = false;
         for (var j = 0; j+i < size; j++){
-          if(this.rows()[j][j+i] === 1){
+          if(this.get(j)[j+i] === 1){
             if(oneQueen){
               return true;
             } else {
@@ -187,7 +218,18 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var rowIndex = 0;
+      var size = this.get('n');
+      var count = 0;
+      var colIndex = minorDiagonalColumnIndexAtFirstRow;
+       
+      for(; colIndex >= 0 && rowIndex < size; colIndex--, rowIndex++){
+        if(colIndex < size){
+          count += this.get(rowIndex)[colIndex];
+        }
+      }
+
+      return count > 1;
     },
 
     // test if any minor diagonals on this board contain conflicts
@@ -198,7 +240,7 @@
       for (var i = 0; i < size; i++){
         oneQueen = false;
         for (var j = 0; i-j >= 0; j++){
-          if(this.rows()[i-j][j] === 1){
+          if(this.get(i-j)[j] === 1){
             if(oneQueen){
               return true;
             } else {
@@ -211,7 +253,7 @@
       for (var i = 1; i < size; i++){
         oneQueen = false;
         for (var j = 0; j+i < size; j++){
-          if (this.rows()[size - 1 - j][j+i] === 1){
+          if (this.get(size - 1 - j)[j+i] === 1){
             if(oneQueen){
               return true;
             } else {
